@@ -7,21 +7,10 @@
         *{
             background-color:rgba(156,96,153,0.5);
         }
-        .letter{
-            position:absolute;
-            top:290px;
-            left:620px;
-            /* background-color:red; */
-            box-shadow: 
-                10px 10px 20px rgba(0,0,0,0.3),
-                inset -5px -5px 10px rgba(0,0,0,0.3);
-            z-index:20;
-        }
         .envelope {
             position: absolute;
             top: 150px;
             left: 500px;
-            
         }
 
         canvas {
@@ -29,39 +18,41 @@
             top: 0;
             left: 0;
             pointer-events:none;
-
         }
 
         .wrapper {
             position: relative;
             width: 400px;
             height: 300px;
-            
         }
+
         #ohh{
-            
             position:absolute;
             left:170px;
             top:145px;
-              z-index:142;
-              border-radius:50px;
+            z-index:142;
+            border-radius:50px;
         }
+
+        /* message is NOW inside .wrapper */
         #message{
             position:absolute;
             z-index:30;
-            top:150px;
-            left:500px;
+            top:0;
+            left:0;
             width:400px;
             height:300px;
+            display:none;
+            box-sizing:border-box;
         }
 
         /* Fix layering */
         #mycanvas1 { pointer-events: auto; z-index: 4; }
-        #mycanvas2 {  z-index: 3; }
-        #mycanvas3 {  z-index: 2; }
-        #mycanvas4 {  z-index: 1; }
+        #mycanvas2 { z-index: 3; }
+        #mycanvas3 { z-index: 2; }
+        #mycanvas4 { z-index: 1; }
 
-        /* ---- RESPONSIVE ONLY (nothing above touched) ---- */
+        /* ---- RESPONSIVE ---- */
         @media (max-width: 1000px) {
             .envelope {
                 position: fixed;
@@ -82,30 +73,30 @@
                 top: 50%;
                 transform: translate(-50%, -50%);
             }
+            /* message stays inside the wrapper box */
             #message {
-                position: fixed;
-                top: 4%;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 90vw;
-                height: auto;
-                max-height: 38vh;
-                overflow-y: auto;
-                font-size: clamp(11px, 3.5vw, 15px);
-                line-height: 1.6;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                font-size: clamp(10px, 3vw, 14px);
+                line-height: 1.5;
                 padding: 10px;
+                overflow-y: auto;
             }
         }
     </style>
 </head>
 <body>
-<div class="letter" id="message"  onclick="msg()">
-    
-</div>
+
 <div class="envelope">
     <div class="wrapper">
-        <button  id="ohh" onclick="openAll()">click me</button>
-        <canvas id="mycanvas1" width="400" height="300" onclick="openone()" ></canvas>
+        <button id="ohh" onclick="openAll()">click me</button>
+
+        <!-- message is now INSIDE wrapper so it sits within the envelope box -->
+        <div id="message" onclick="msg()"></div>
+
+        <canvas id="mycanvas1" width="400" height="300" onclick="openone()"></canvas>
         <canvas id="mycanvas2" width="400" height="300" onclick="opentwo()"></canvas>
         <canvas id="mycanvas3" width="400" height="300" onclick="openthree()"></canvas>
         <canvas id="mycanvas4" width="400" height="300" onclick="openfour()"></canvas>
@@ -113,7 +104,6 @@
 </div>
 
 <script>
-    // document.getElementById("mycanvas1").style.border="1px solid black";
     function openAll(){
         openone();
         opentwo();
@@ -121,6 +111,7 @@
         openfour();
         document.getElementById("ohh").remove();
     }
+
     function msg(){
         let text=`I first saw you when I was in 7th grade, but I didn't talk to you. At that time, I was new to the class, so I felt scared.
 From 8th grade onwards, we knew each other, but we still didn't talk much. I'm not exactly sure when it happened, but one day you started talking to me for the first time.
@@ -128,9 +119,10 @@ That day will always be the most memorable day of my life.\n
  i can't describe you i don't know how poet will describe if I am a poet I will not describe you i would like to say even beautiful had a face she will feel jealous of you that amount of beauty that you have. mainly the eyes are stunning i can't get out from that eyes.<br>
 Lastly, I would like to say something that you don't know. On our last day of school, which was also my birthday, I planned to give you a Dairy Milk Family Pack chocolate. Unfortunately, due to some reasons, I couldn't give it to you. Next time, I will try to give it.`;
         let n=text.length;
-        
 
         let c=document.getElementById("message");
+
+        /* expand message to fill screen for reading */
         c.style.position="fixed";
         c.style.top="4%";
         c.style.left="50%";
@@ -143,20 +135,21 @@ Lastly, I would like to say something that you don't know. On our last day of sc
         c.style.padding="16px";
         c.style.fontSize="clamp(12px, 3.5vw, 16px)";
         c.style.lineHeight="1.6";
-        c.style.boxshadow="5px 5px 5px 5px  inset 0 0 30px rgba(0,0,0,0.5)";
-        
-        c.innerHTML=""; 
+        c.style.boxShadow="5px 5px 15px rgba(0,0,0,0.4)";
+        c.style.zIndex="200";
+
+        c.innerHTML="";
         let i=0;
         let interval=setInterval(()=>{
             if(i<n){
                 c.innerHTML+=text[i];
                 i++;
-            }
-            else{
+            } else {
                 clearInterval(interval);
             }
         },100);
     }
+
 // variables
 let flapy1 = 150;
 let flapy2 = 150;
@@ -173,7 +166,6 @@ let isOpening4 = false;
 function openone(){
     if (isOpening1) return;
     isOpening1 = true;
-
     const interval = setInterval(() => {
         if (flapy1 > 0) {
             flapy1 -= 3;
@@ -184,14 +176,13 @@ function openone(){
         }
     }, 16);
     document.getElementById("mycanvas1").style.pointerEvents = "none";
-document.getElementById("mycanvas2").style.pointerEvents = "auto";
+    document.getElementById("mycanvas2").style.pointerEvents = "auto";
 }
 
 // 🔴 BOTTOM
 function opentwo(){
     if (isOpening2) return;
     isOpening2 = true;
-
     const interval = setInterval(() => {
         if (flapy2 < 300) {
             flapy2 += 3;
@@ -202,56 +193,54 @@ function opentwo(){
         }
     }, 16);
     document.getElementById("mycanvas2").style.pointerEvents = "none";
-document.getElementById("mycanvas3").style.pointerEvents = "auto";
+    document.getElementById("mycanvas3").style.pointerEvents = "auto";
 }
 
 // 🟢 LEFT
 function openthree(){
     if (isOpening3) return;
     isOpening3 = true;
-
     const interval = setInterval(() => {
         if (flapy3 > 0) {
             flapy3 -= 3;
-            draw3(); // ✅ FIXED (was wrong before)
+            draw3();
         } else {
             clearInterval(interval);
             isOpening3 = false;
         }
     }, 16);
     document.getElementById("mycanvas3").style.pointerEvents = "none";
-document.getElementById("mycanvas4").style.pointerEvents = "auto";
+    document.getElementById("mycanvas4").style.pointerEvents = "auto";
 }
 
 // 🟠 RIGHT
 function openfour(){
     if (isOpening4) return;
     isOpening4 = true;
-
     const interval = setInterval(() => {
         if (flapy4 > 0) {
             flapy4 += 3;
-            draw4(); // ✅ FIXED (was wrong before)
+            draw4();
         } else {
             clearInterval(interval);
             isOpening4 = false;
         }
     }, 16);
-    // document.getElementById("message").style.background="black";
 
-    document.getElementById("message").innerHTML="Tap to reveal";
-    
-    document.getElementById("message").style.display="flex";
-    document.getElementById("message").style.alignItems="center";
-    document.getElementById("message").style.justifyContent="center";
+    let m = document.getElementById("message");
+    m.innerHTML = "Tap to reveal";
+    m.style.display = "flex";
+    m.style.alignItems = "center";
+    m.style.justifyContent = "center";
+    m.style.background = "rgba(255,255,255,0.85)";
+    m.style.cursor = "pointer";
+
     document.getElementById("mycanvas4").style.pointerEvents = "none";
 }
 
 // DRAW FUNCTIONS
-
 function draw1(){
     const ctx = document.getElementById("mycanvas1").getContext("2d");
-    
     ctx.clearRect(0,0,400,300);
     ctx.beginPath();
     ctx.moveTo(0,0);
@@ -259,7 +248,6 @@ function draw1(){
     ctx.lineTo(200,flapy1);
     ctx.fillStyle="lightblue";
     ctx.fill();
-    
 }
 
 function draw2(){
@@ -271,8 +259,6 @@ function draw2(){
     ctx.lineTo(200,flapy2);
     ctx.fillStyle="lightblue";
     ctx.fill();
-    
-
 }
 
 function draw3(){
@@ -284,7 +270,6 @@ function draw3(){
     ctx.lineTo(flapy3,150);
     ctx.fillStyle="lightgreen";
     ctx.fill();
-    
 }
 
 function draw4(){
@@ -296,7 +281,6 @@ function draw4(){
     ctx.lineTo(flapy4,150);
     ctx.fillStyle="lightgreen";
     ctx.fill();
-    
 }
 
 // initial draw
@@ -304,8 +288,6 @@ draw1();
 draw2();
 draw3();
 draw4();
-
-
 </script>
 
 </body>
