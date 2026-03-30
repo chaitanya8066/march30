@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envelope Canvas</title>
+    <style>
+        *{
+            background-color:rgba(156,96,153,0.5);
+        }
+        .letter{
+            position:absolute;
+            top:290px;
+            left:620px;
+            /* background-color:red; */
+            box-shadow: 
+                10px 10px 20px rgba(0,0,0,0.3),
+                inset -5px -5px 10px rgba(0,0,0,0.3);
+            z-index:20;
+        }
+        .envelope {
+            position: absolute;
+            top: 150px;
+            left: 500px;
+            
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events:none;
+
+        }
+
+        .wrapper {
+            position: relative;
+            width: 400px;
+            height: 300px;
+            
+        }
+        #ohh{
+            
+            position:absolute;
+            left:170px;
+            top:145px;
+              z-index:142;
+              border-radius:50px;
+        }
+        #message{
+            position:absolute;
+            z-index:30;
+            top:150px;
+            left:500px;
+            width:400px;
+            height:300px;
+        }
+
+        /* Fix layering */
+        #mycanvas1 { pointer-events: auto; z-index: 4; }
+        #mycanvas2 {  z-index: 3; }
+        #mycanvas3 {  z-index: 2; }
+        #mycanvas4 {  z-index: 1; }
+
+        /* ---- RESPONSIVE ONLY (nothing above touched) ---- */
+        @media (max-width: 1000px) {
+            .envelope {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .wrapper {
+                width: 90vw;
+                height: calc(90vw * 0.75);
+            }
+            .wrapper canvas {
+                width: 100%;
+                height: 100%;
+            }
+            #ohh {
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+            #message {
+                position: fixed;
+                top: 4%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90vw;
+                height: auto;
+                max-height: 38vh;
+                overflow-y: auto;
+                font-size: clamp(11px, 3.5vw, 15px);
+                line-height: 1.6;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="letter" id="message"  onclick="msg()">
+    
+</div>
+<div class="envelope">
+    <div class="wrapper">
+        <button  id="ohh" onclick="openAll()">click me</button>
+        <canvas id="mycanvas1" width="400" height="300" onclick="openone()" ></canvas>
+        <canvas id="mycanvas2" width="400" height="300" onclick="opentwo()"></canvas>
+        <canvas id="mycanvas3" width="400" height="300" onclick="openthree()"></canvas>
+        <canvas id="mycanvas4" width="400" height="300" onclick="openfour()"></canvas>
+    </div>
+</div>
+
+<script>
+    // document.getElementById("mycanvas1").style.border="1px solid black";
+    function openAll(){
+        openone();
+        opentwo();
+        openthree();
+        openfour();
+        document.getElementById("ohh").remove();
+    }
+    function msg(){
+        let text=`I first saw you when I was in 7th grade, but I didn't talk to you. At that time, I was new to the class, so I felt scared.
+From 8th grade onwards, we knew each other, but we still didn't talk much. I'm not exactly sure when it happened, but one day you started talking to me for the first time.
+That day will always be the most memorable day of my life.\n
+ i can't describe you i don't know how poet will describe if I am a poet I will not describe you i would like to say even beautiful had a face she will feel jealous of you that amount of beauty that you have. mainly the eyes are stunning i can't get out from that eyes.<br>
+Lastly, I would like to say something that you don't know. On our last day of school, which was also my birthday, I planned to give you a Dairy Milk Family Pack chocolate. Unfortunately, due to some reasons, I couldn't give it to you. Next time, I will try to give it.`;
+        let n=text.length;
+        
+
+        let c=document.getElementById("message");
+        c.style.position="fixed";
+        c.style.top="4%";
+        c.style.left="50%";
+        c.style.transform="translateX(-50%)";
+        c.style.width="min(400px, 90vw)";
+        c.style.height="auto";
+        c.style.maxHeight="80vh";
+        c.style.overflowY="auto";
+        c.style.background="white";
+        c.style.padding="16px";
+        c.style.fontSize="clamp(12px, 3.5vw, 16px)";
+        c.style.lineHeight="1.6";
+        c.style.boxshadow="5px 5px 5px 5px  inset 0 0 30px rgba(0,0,0,0.5)";
+        
+        c.innerHTML=""; 
+        let i=0;
+        let interval=setInterval(()=>{
+            if(i<n){
+                c.innerHTML+=text[i];
+                i++;
+            }
+            else{
+                clearInterval(interval);
+            }
+        },100);
+    }
+// variables
+let flapy1 = 150;
+let flapy2 = 150;
+let flapy3 = 200;
+let flapy4 = 200;
+
+// separate flags
+let isOpening1 = false;
+let isOpening2 = false;
+let isOpening3 = false;
+let isOpening4 = false;
+
+// 🔵 TOP
+function openone(){
+    if (isOpening1) return;
+    isOpening1 = true;
+
+    const interval = setInterval(() => {
+        if (flapy1 > 0) {
+            flapy1 -= 3;
+            draw1();
+        } else {
+            clearInterval(interval);
+            isOpening1 = false;
+        }
+    }, 16);
+    document.getElementById("mycanvas1").style.pointerEvents = "none";
+document.getElementById("mycanvas2").style.pointerEvents = "auto";
+}
+
+// 🔴 BOTTOM
+function opentwo(){
+    if (isOpening2) return;
+    isOpening2 = true;
+
+    const interval = setInterval(() => {
+        if (flapy2 < 300) {
+            flapy2 += 3;
+            draw2();
+        } else {
+            clearInterval(interval);
+            isOpening2 = false;
+        }
+    }, 16);
+    document.getElementById("mycanvas2").style.pointerEvents = "none";
+document.getElementById("mycanvas3").style.pointerEvents = "auto";
+}
+
+// 🟢 LEFT
+function openthree(){
+    if (isOpening3) return;
+    isOpening3 = true;
+
+    const interval = setInterval(() => {
+        if (flapy3 > 0) {
+            flapy3 -= 3;
+            draw3(); // ✅ FIXED (was wrong before)
+        } else {
+            clearInterval(interval);
+            isOpening3 = false;
+        }
+    }, 16);
+    document.getElementById("mycanvas3").style.pointerEvents = "none";
+document.getElementById("mycanvas4").style.pointerEvents = "auto";
+}
+
+// 🟠 RIGHT
+function openfour(){
+    if (isOpening4) return;
+    isOpening4 = true;
+
+    const interval = setInterval(() => {
+        if (flapy4 > 0) {
+            flapy4 += 3;
+            draw4(); // ✅ FIXED (was wrong before)
+        } else {
+            clearInterval(interval);
+            isOpening4 = false;
+        }
+    }, 16);
+    // document.getElementById("message").style.background="black";
+
+    document.getElementById("message").innerHTML="Tap to reveal";
+    
+    document.getElementById("message").style.display="flex";
+    document.getElementById("message").style.alignItems="center";
+    document.getElementById("message").style.justifyContent="center";
+    document.getElementById("mycanvas4").style.pointerEvents = "none";
+}
+
+// DRAW FUNCTIONS
+
+function draw1(){
+    const ctx = document.getElementById("mycanvas1").getContext("2d");
+    
+    ctx.clearRect(0,0,400,300);
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(400,0);
+    ctx.lineTo(200,flapy1);
+    ctx.fillStyle="lightblue";
+    ctx.fill();
+    
+}
+
+function draw2(){
+    const ctx = document.getElementById("mycanvas2").getContext("2d");
+    ctx.clearRect(0,0,400,300);
+    ctx.beginPath();
+    ctx.moveTo(0,300);
+    ctx.lineTo(400,300);
+    ctx.lineTo(200,flapy2);
+    ctx.fillStyle="lightblue";
+    ctx.fill();
+    
+
+}
+
+function draw3(){
+    const ctx = document.getElementById("mycanvas3").getContext("2d");
+    ctx.clearRect(0,0,400,300);
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(0,300);
+    ctx.lineTo(flapy3,150);
+    ctx.fillStyle="lightgreen";
+    ctx.fill();
+    
+}
+
+function draw4(){
+    const ctx = document.getElementById("mycanvas4").getContext("2d");
+    ctx.clearRect(0,0,400,300);
+    ctx.beginPath();
+    ctx.moveTo(400,0);
+    ctx.lineTo(400,300);
+    ctx.lineTo(flapy4,150);
+    ctx.fillStyle="lightgreen";
+    ctx.fill();
+    
+}
+
+// initial draw
+draw1();
+draw2();
+draw3();
+draw4();
+
+
+</script>
+
+</body>
+</html>
